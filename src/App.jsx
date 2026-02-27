@@ -21,7 +21,7 @@ export default function App() {
       <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/directorio" element={<DirectorioPage />} />
-        <Route path="/socio/:slug" element={<MicroSitioPage />} />
+        <Route path="/socio/:slug" element={<accesousuarioPage />} />
         
       </Route>
 
