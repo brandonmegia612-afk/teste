@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Building2, Search, Home, Menu, X, ChevronRight,LogIn,LogOut, KeyRound, Lock, Unlock, ShieldCheck} from 'lucide-react';
+import { Building2, Search, Home, Menu, X, ChevronRight,ClipboardList } from 'lucide-react';
 
 export default function PublicLayout() {
   const [scrolled, setScrolled] = useState(false);
@@ -15,13 +15,13 @@ export default function PublicLayout() {
 
   useEffect(() => setMobileOpen(false), [location.pathname]);
 
-  const navLinks = [
-    { to: '/', label: 'Inicio', icon: Home },
-    { to: '/directorio', label: 'Directorio', icon: Search },
-    { to: '/formulario', label: 'Formulario', icon: Unlock }
+const navLinks = [
+  { to: '/',           label: 'Inicio',      icon: Home          },
+  { to: '/directorio', label: 'Directorio',  icon: Search        },
+  { to: '/formulario', label: 'Formulario',  icon: ClipboardList }, // ✅
+];
     
-  ];
-
+ 
   const isActive = (path) =>
     path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
 
@@ -133,7 +133,7 @@ export default function PublicLayout() {
 
       {/* ── Footer profesional ──────────────────────────── */}
       <footer className="bg-surface-900 text-surface-400 relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid opacity-30%" />
+        <div className="absolute inset-0 bg-grid opacity-30" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
