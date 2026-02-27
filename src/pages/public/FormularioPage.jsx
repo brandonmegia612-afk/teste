@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import api from '../../api/client';
 import {
   Building2, MapPin, Phone, Globe, Facebook, Linkedin, Twitter,
