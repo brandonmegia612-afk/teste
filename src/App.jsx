@@ -10,6 +10,7 @@ import DashboardPage from './pages/admin/DashboardPage';
 import SociosAdminPage from './pages/admin/SociosAdminPage';
 import UsuariosAdminPage from './pages/admin/UsuariosAdminPage';
 import SocioFormPage from './pages/admin/SocioFormPage';
+import SocioDetallePage from './src/pages/SocioDetallePage';
 
 /**
  * App principal: rutas públicas y admin.
