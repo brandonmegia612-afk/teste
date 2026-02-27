@@ -18,7 +18,7 @@ export default function PublicLayout() {
   const navLinks = [
     { to: '/', label: 'Inicio', icon: Home },
     { to: '/directorio', label: 'Directorio', icon: Search },
-    { to: '/socio/:slug', label: 'Micro Sitios', icon: Building2 }
+    { to: '/formulario', label: 'Formulario', icon: Building2 }
     
   ];
 
