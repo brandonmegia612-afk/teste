@@ -1,223 +1,426 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import api from '../../api/client';
 import {
-  Building2, MapPin, Phone, Globe, Facebook, Linkedin, Twitter,
-  Send, ArrowLeft, CheckCircle, ExternalLink, Mail, Tag, Briefcase
+  Building2, Mail, Phone, Globe, MapPin,
+  ClipboardList, Send, X, CheckCircle2,
+  User, Tag, Image, AlertCircle, Loader2
 } from 'lucide-react';
 
-function PageSkeleton() {
+// ── Componente campo reutilizable ─────────────────────────────
+function FormField({ label, icon: Icon, error, required, children }) {
   return (
-    <div className="bg-mesh min-h-screen">
-      <div className="bg-gradient-to-br from-casatic-700 to-surface-900 h-48" />
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 pb-16">
-        <div className="card-base p-8 mb-6">
-          <div className="flex items-start gap-6">
-            <div className="w-20 h-20 skeleton rounded-2xl flex-shrink-0" />
-            <div className="flex-1 space-y-3">
-              <div className="h-7 skeleton w-1/3" />
-              <div className="h-4 skeleton w-full" />
-              <div className="h-4 skeleton w-2/3" />
-            </div>
-          </div>
-        </div>
+    <div className="space-y-1.5">
+      <label className="block text-sm font-semibold text-surface-700">
+        {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
+      </label>
+      <div className="relative">
+        {Icon && (
+          <Icon
+            size={16}
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-surface-400 pointer-events-none z-10"
+          />
+        )}
+        {children}
       </div>
+      {error && (
+        <p className="text-xs text-red-500 flex items-center gap-1">
+          <AlertCircle size={12} /> {error}
+        </p>
+      )}
     </div>
   );
 }
 
+// ── Estados del envío ─────────────────────────────────────────
+const ESTADO = { IDLE: 'idle', LOADING: 'loading', SUCCESS: 'success', ERROR: 'error' };
+
 export default function FormularioPage() {
-  const [socios, setSocios] = useState([]);
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [query, setQuery] = useState('');
-  const [especialidad, setEspecialidad] = useState('');
+  const navigate = useNavigate();
+  const [estado, setEstado] = useState(ESTADO.IDLE);
   const [especialidades, setEspecialidades] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const pageSize = 12;
+  const [tagInput, setTagInput] = useState('');
+  const [errors, setErrors] = useState({});
 
+  const [form, setForm] = useState({
+    nombreEmpresa:    '',
+    descripcion:      '',
+    direccion:        '',
+    email:            '',
+    telefono:         '',
+    sitioWeb:         '',
+    contactoNombre:   '',
+    logoUrl:          '',
+    especialidades:   [],
+  });
 
-
-
+  // Cargar especialidades existentes para sugerencias
   useEffect(() => {
-    api.get('/formulario/especialidades').then((res) => setEspecialidades(res.data)).catch(() => {});
+    api.get('/src/pages/public/FormularioPage/especialidades')
+      .then((res) => setEspecialidades(res.data))
+      .catch(() => {});
   }, []);
 
-  useEffect(() => {
-    setLoading(true);
-    const params = { page, pageSize };
-    if (query) params.query = query;
-    if (especialidad) params.especialidad = especialidad;
-    api.get('/formulario', { params })
-      .then((res) => { setSocios(res.data.items); setTotal(res.data.total); setTotalPages(res.data.totalPages); })
-      .catch(() => setSocios([]))
-      .finally(() => setLoading(false));
-  }, [page, query, especialidad]);
+  // ── Manejo de campos ────────────────────────────────────────
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
+  };
 
-  const handleSearch = (e) => { e.preventDefault(); setPage(1); };
-  const clearFilters = () => { setQuery(''); setEspecialidad(''); setPage(1); };
-  const hasFilters = query || especialidad;
+  // ── Tags / especialidades ───────────────────────────────────
+  const addTag = (tag) => {
+    const clean = tag.trim();
+    if (!clean || form.especialidades.includes(clean)) return;
+    setForm((prev) => ({ ...prev, especialidades: [...prev.especialidades, clean] }));
+    setTagInput('');
+  };
+
+  const removeTag = (tag) => {
+    setForm((prev) => ({
+      ...prev,
+      especialidades: prev.especialidades.filter((e) => e !== tag),
+    }));
+  };
+
+  const handleTagKey = (e) => {
+    if (['Enter', ','].includes(e.key)) {
+      e.preventDefault();
+      addTag(tagInput);
+    }
+  };
+
+  // ── Validación ──────────────────────────────────────────────
+  const validate = () => {
+    const errs = {};
+    if (!form.nombreEmpresa.trim())  errs.nombreEmpresa = 'El nombre es obligatorio';
+    if (!form.descripcion.trim())    errs.descripcion   = 'La descripción es obligatoria';
+    if (!form.email.trim())          errs.email         = 'El correo es obligatorio';
+    else if (!/\S+@\S+\.\S+/.test(form.email)) errs.email = 'Correo inválido';
+    if (form.sitioWeb && !/^https?:\/\//.test(form.sitioWeb))
+      errs.sitioWeb = 'Debe comenzar con http:// o https://';
+    return errs;
+  };
+
+  // ── Envío ───────────────────────────────────────────────────
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errs = validate();
+    if (Object.keys(errs).length > 0) { setErrors(errs); return; }
+
+    setEstado(ESTADO.LOADING);
+    try {
+      await api.post('/formulario', form);
+      setEstado(ESTADO.SUCCESS);
+    } catch {
+      setEstado(ESTADO.ERROR);
+    }
+  };
+
+  const resetForm = () => {
+    setForm({
+      nombreEmpresa: '', descripcion: '', direccion: '',
+      email: '', telefono: '', sitioWeb: '',
+      contactoNombre: '', logoUrl: '', especialidades: [],
+    });
+    setErrors({});
+    setEstado(ESTADO.IDLE);
+  };
+
+  // ── Pantalla de éxito ───────────────────────────────────────
+  if (estado === ESTADO.SUCCESS) {
+    return (
+      <div className="bg-mesh min-h-screen flex items-center justify-center px-4">
+        <div className="card-base p-10 max-w-md w-full text-center animate-fade-in-up">
+          <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle2 size={40} className="text-green-500" />
+          </div>
+          <h2 className="text-2xl font-bold text-surface-900 mb-2">¡Solicitud enviada!</h2>
+          <p className="text-surface-500 text-sm mb-6 leading-relaxed">
+            Tu empresa fue registrada correctamente. El equipo CASATIC revisará
+            la información y la publicará en el directorio pronto.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button onClick={resetForm} className="btn-secondary btn-sm">
+              Enviar otra solicitud
+            </button>
+            <button onClick={() => navigate('/directorio')} className="btn-primary btn-sm">
+              Ver directorio
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const isLoading = estado === ESTADO.LOADING;
 
   return (
     <div className="bg-mesh min-h-screen">
-      {/* ── Hero Banner ──────────────────────────────────── */}
-      <div className="bg-gradient-to-br from-casatic-700 via-casatic-800 to-surface-900 h-56 relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid opacity-10" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-casatic-500/15 rounded-full blur-3xl" />
+      {/* ── Header ─────────────────────────────────────────── */}
+      <div className="bg-gradient-to-br from-casatic-700 via-casatic-800 to-surface-900 text-white py-16 relative overflow-hidden">
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
+          <div
+            className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-4 animate-fade-in-up"
+            style={{ animationDelay: '0s' }}
+          >
+            <ClipboardList size={28} className="text-white" />
+          </div>
+          <h1
+            style={{ animationDelay: '0.05s' }}
+            className="text-4xl md:text-5xl font-bold tracking-tight text-center animate-fade-in-up"
+          >
+            Registra tu Empresa
+          </h1>
+          <p
+            style={{ animationDelay: '0.1s' }}
+            className="mt-3 text-white/70 text-center text-lg max-w-xl animate-fade-in-up"
+          >
+            Forma parte del Directorio Interactivo CASATIC 2026
+          </p>
+        </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-28 relative z-10 pb-16">
-        {/* ── Back Link ──────────────────────────────────── */}
-        <Link to="/directorio" className="inline-flex items-center gap-1.5 text-white/80 hover:text-white text-sm mb-6 transition-colors">
-          <ArrowLeft size={14} /> Volver al directorio
-        </Link>
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10 pb-20">
 
-        {/* ── Company Header ─────────────────────────────── */}
-        <div className="card-base p-8 mb-6 animate-fade-in-up">
-          <div className="flex flex-col sm:flex-row items-start gap-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-casatic-100 to-casatic-50 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-card">
-              {socio.logoUrl ? (
-                <img src={socio.logoUrl} alt={socio.nombreEmpresa} className="w-14 h-14 object-contain rounded-xl" />
-              ) : (
-                <Building2 size={32} className="text-casatic-600" />
-              )}
-            </div>
-            <div className="flex-1">
-              <h1 className="text-2xl sm:text-3xl font-bold text-surface-900 tracking-tight">{socio.nombreEmpresa}</h1>
-              <p className="text-surface-500 mt-2 leading-relaxed">{socio.descripcion}</p>
-
-              <div className="mt-4 flex flex-wrap gap-3">
-                {socio.telefono && (
-                  <span className="inline-flex items-center gap-1.5 text-sm text-surface-600 bg-surface-50 px-3 py-1.5 rounded-lg">
-                    <Phone size={14} className="text-surface-400" /> {socio.telefono}
-                  </span>
-                )}
-                {socio.direccion && (
-                  <span className="inline-flex items-center gap-1.5 text-sm text-surface-600 bg-surface-50 px-3 py-1.5 rounded-lg">
-                    <MapPin size={14} className="text-surface-400" /> {socio.direccion}
-                  </span>
-                )}
-              </div>
-
-              {socialLinks.length > 0 && (
-                <div className="mt-4 flex gap-2">
-                  {socialLinks.map((s) => (
-                    <a key={s.key} href={redes[s.key]} target="_blank" rel="noopener noreferrer"
-                      className={`p-2.5 rounded-xl transition-all duration-200 hover:-translate-y-0.5 ${s.color}`}
-                      title={s.label}
-                    >
-                      <s.icon size={18} />
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* ── Especialidades y Servicios ──────────────────── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-          <div className="card-base p-6 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-            <h2 className="font-semibold text-surface-900 mb-4 flex items-center gap-2">
-              <Tag size={18} className="text-casatic-600" />
-              Especialidades
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {socio.especialidades?.length > 0 ? (
-                socio.especialidades.map((esp) => (
-                  <span key={esp} className="badge-primary">{esp}</span>
-                ))
-              ) : (
-                <p className="text-sm text-surface-400">Sin especialidades registradas</p>
-              )}
-            </div>
-          </div>
-
-          <div className="card-base p-6 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
-            <h2 className="font-semibold text-surface-900 mb-4 flex items-center gap-2">
-              <Briefcase size={18} className="text-casatic-600" />
-              Servicios
-            </h2>
-            {socio.servicios?.length > 0 ? (
-              <ul className="space-y-2">
-                {socio.servicios.map((srv) => (
-                  <li key={srv} className="flex items-center gap-2.5 text-sm text-surface-600">
-                    <CheckCircle size={15} className="text-accent-500 flex-shrink-0" />
-                    {srv}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-sm text-surface-400">Sin servicios registrados</p>
-            )}
-          </div>
-        </div>
-
-        {/* ── Marcas ─────────────────────────────────────── */}
-        {socio.marcasRepresenta && (
-          <div className="card-base p-6 mb-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-            <h2 className="font-semibold text-surface-900 mb-3 flex items-center gap-2">
-              <ExternalLink size={18} className="text-casatic-600" />
-              Marcas que Representa
-            </h2>
-            <p className="text-sm text-surface-600">{socio.marcasRepresenta}</p>
+        {/* Banner de error global */}
+        {estado === ESTADO.ERROR && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-red-700 text-sm animate-fade-in-up">
+            <AlertCircle size={18} className="flex-shrink-0" />
+            Ocurrió un error al enviar. Por favor intenta de nuevo.
+            <button onClick={() => setEstado(ESTADO.IDLE)} className="ml-auto">
+              <X size={16} />
+            </button>
           </div>
         )}
 
-        {/* ── Contact Form ───────────────────────────────── */}
-        <div className="card-base p-8 animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
-          <h2 className="font-semibold text-lg text-surface-900 mb-1 flex items-center gap-2">
-            <Mail size={20} className="text-casatic-600" />
-            Contactar a {socio.nombreEmpresa}
-          </h2>
-          <p className="text-sm text-surface-500 mb-6">Completa el formulario y el socio recibirá tu mensaje.</p>
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-2xl shadow-elevated p-6 md:p-8 space-y-8 animate-fade-in-up"
+          style={{ animationDelay: '0.15s' }}
+        >
 
-          {enviado ? (
-            <div className="alert-success py-6">
-              <div className="flex flex-col items-center gap-3 w-full text-center">
-                <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
-                  <CheckCircle size={24} className="text-emerald-600" />
-                </div>
-                <div>
-                  <p className="font-semibold text-emerald-800">Mensaje enviado con éxito</p>
-                  <p className="text-emerald-600 text-sm mt-1">El socio se pondrá en contacto contigo pronto.</p>
-                </div>
-                <button onClick={() => setEnviado(false)} className="btn-secondary btn-sm mt-2">
-                  Enviar otro mensaje
-                </button>
+          {/* ── Sección 1: Empresa ─────────────────────────── */}
+          <section>
+            <h2 className="text-base font-bold text-surface-800 flex items-center gap-2 mb-5 pb-3 border-b border-surface-100">
+              <Building2 size={18} className="text-casatic-600" />
+              Información de la Empresa
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+              <div className="md:col-span-2">
+                <FormField label="Nombre de la empresa" icon={Building2} error={errors.nombreEmpresa} required>
+                  <input
+                    type="text"
+                    name="nombreEmpresa"
+                    value={form.nombreEmpresa}
+                    onChange={handleChange}
+                    placeholder="Ej. TechSolve S.A. de C.V."
+                    className={`input-field pl-10 ${errors.nombreEmpresa ? 'border-red-400 focus:ring-red-200' : ''}`}
+                  />
+                </FormField>
               </div>
+
+              <div className="md:col-span-2">
+                <FormField label="Descripción" error={errors.descripcion} required>
+                  <textarea
+                    name="descripcion"
+                    value={form.descripcion}
+                    onChange={handleChange}
+                    rows={4}
+                    placeholder="Describe brevemente los servicios y soluciones que ofrece tu empresa..."
+                    className={`input-field resize-none pt-3 ${errors.descripcion ? 'border-red-400' : ''}`}
+                  />
+                </FormField>
+              </div>
+
+              <div className="md:col-span-2">
+                <FormField label="Dirección" icon={MapPin}>
+                  <input
+                    type="text"
+                    name="direccion"
+                    value={form.direccion}
+                    onChange={handleChange}
+                    placeholder="Ej. Col. Escalón, San Salvador"
+                    className="input-field pl-10"
+                  />
+                </FormField>
+              </div>
+
+              <FormField label="URL del Logotipo" icon={Image} error={errors.logoUrl}>
+                <input
+                  type="url"
+                  name="logoUrl"
+                  value={form.logoUrl}
+                  onChange={handleChange}
+                  placeholder="https://miempresa.com/logo.png"
+                  className="input-field pl-10"
+                />
+              </FormField>
+
+              <FormField label="Sitio Web" icon={Globe} error={errors.sitioWeb}>
+                <input
+                  type="url"
+                  name="sitioWeb"
+                  value={form.sitioWeb}
+                  onChange={handleChange}
+                  placeholder="https://miempresa.com"
+                  className={`input-field pl-10 ${errors.sitioWeb ? 'border-red-400' : ''}`}
+                />
+              </FormField>
+
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="input-label">Nombre</label>
-                  <input type="text" required value={form.nombre}
-                    onChange={(e) => setForm({ ...form, nombre: e.target.value })}
-                    className="input-field" placeholder="Tu nombre completo" />
-                </div>
-                <div>
-                  <label className="input-label">Correo electrónico</label>
-                  <input type="email" required value={form.correo}
-                    onChange={(e) => setForm({ ...form, correo: e.target.value })}
-                    className="input-field" placeholder="tu@email.com" />
-                </div>
+          </section>
+
+          {/* ── Sección 2: Contacto ────────────────────────── */}
+          <section>
+            <h2 className="text-base font-bold text-surface-800 flex items-center gap-2 mb-5 pb-3 border-b border-surface-100">
+              <User size={18} className="text-casatic-600" />
+              Datos de Contacto
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+              <div className="md:col-span-2">
+                <FormField label="Nombre del contacto" icon={User}>
+                  <input
+                    type="text"
+                    name="contactoNombre"
+                    value={form.contactoNombre}
+                    onChange={handleChange}
+                    placeholder="Nombre y apellido del representante"
+                    className="input-field pl-10"
+                  />
+                </FormField>
               </div>
-              <div>
-                <label className="input-label">Mensaje</label>
-                <textarea required rows={4} value={form.mensaje}
-                  onChange={(e) => setForm({ ...form, mensaje: e.target.value })}
-                  className="input-field resize-none" placeholder="Describe tu consulta o necesidad..." />
+
+              <FormField label="Correo electrónico" icon={Mail} error={errors.email} required>
+                <input
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="contacto@empresa.com"
+                  className={`input-field pl-10 ${errors.email ? 'border-red-400' : ''}`}
+                />
+              </FormField>
+
+              <FormField label="Teléfono" icon={Phone}>
+                <input
+                  type="tel"
+                  name="telefono"
+                  value={form.telefono}
+                  onChange={handleChange}
+                  placeholder="+503 2222-3333"
+                  className="input-field pl-10"
+                />
+              </FormField>
+
+            </div>
+          </section>
+
+          {/* ── Sección 3: Especialidades ──────────────────── */}
+          <section>
+            <h2 className="text-base font-bold text-surface-800 flex items-center gap-2 mb-5 pb-3 border-b border-surface-100">
+              <Tag size={18} className="text-casatic-600" />
+              Especialidades / Tecnologías
+            </h2>
+
+            {/* Tags añadidos */}
+            {form.especialidades.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-3">
+                {form.especialidades.map((esp) => (
+                  <span
+                    key={esp}
+                    className="badge-primary flex items-center gap-1.5 text-sm px-3 py-1"
+                  >
+                    {esp}
+                    <button
+                      type="button"
+                      onClick={() => removeTag(esp)}
+                      className="hover:text-red-500 transition-colors"
+                    >
+                      <X size={12} />
+                    </button>
+                  </span>
+                ))}
               </div>
-              {formError && <div className="alert-error"><span>{formError}</span></div>}
-              <button type="submit" disabled={enviando} className="btn-primary">
-                <Send size={16} />
-                {enviando ? 'Enviando...' : 'Enviar Mensaje'}
+            )}
+
+            {/* Input para agregar tag */}
+            <div className="relative">
+              <Tag size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-surface-400" />
+              <input
+                type="text"
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={handleTagKey}
+                placeholder="Escribe una especialidad y presiona Enter o coma (,)"
+                className="input-field pl-10 pr-24"
+              />
+              <button
+                type="button"
+                onClick={() => addTag(tagInput)}
+                disabled={!tagInput.trim()}
+                className="absolute right-2 top-1/2 -translate-y-1/2 btn-primary btn-sm text-xs px-3 py-1.5 disabled:opacity-40"
+              >
+                Agregar
               </button>
-            </form>
-          )}
-        </div>
+            </div>
+
+            {/* Sugerencias */}
+            {especialidades.length > 0 && (
+              <div className="mt-3">
+                <p className="text-xs text-surface-400 mb-2">Sugerencias:</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {especialidades
+                    .filter((e) => !form.especialidades.includes(e))
+                    .slice(0, 10)
+                    .map((esp) => (
+                      <button
+                        key={esp}
+                        type="button"
+                        onClick={() => addTag(esp)}
+                        className="badge-neutral text-xs px-2.5 py-1 hover:bg-casatic-50 hover:text-casatic-700 hover:border-casatic-200 transition-colors cursor-pointer"
+                      >
+                        + {esp}
+                      </button>
+                    ))}
+                </div>
+              </div>
+            )}
+          </section>
+
+          {/* ── Botones ────────────────────────────────────── */}
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => navigate('/directorio')}
+              disabled={isLoading}
+              className="btn-secondary w-full sm:w-auto px-6 py-3 text-base order-2 sm:order-1"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="btn-primary flex-1 py-3 text-base order-1 sm:order-2 flex items-center justify-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 size={20} className="animate-spin" />
+                  Enviando solicitud...
+                </>
+              ) : (
+                <>
+                  <Send size={20} />
+                  Enviar solicitud
+                </>
+              )}
+            </button>
+          </div>
+
+        </form>
       </div>
     </div>
   );
