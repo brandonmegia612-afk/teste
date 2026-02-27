@@ -90,7 +90,7 @@ export default function DirectorioPage() {
       </div><br></br>
       <br></br>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10 pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10 pb-16 img-rounded-lg">
         {/* ── Search Bar ─────────────────────────────────── */}
         <form
           onSubmit={handleSearch}

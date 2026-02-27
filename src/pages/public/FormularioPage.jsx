@@ -59,32 +59,24 @@ export default function MicroSitioPage() {
     }
   };
 
-  const parseRedes = (json) => { try { return JSON.parse(json); } catch { return {}; } };
+  useEffect(() => {
+    api.get('/formulario/especialidades').then((res) => setEspecialidades(res.data)).catch(() => {});
+  }, []);
 
-  if (loading) return <PageSkeleton />;
+  useEffect(() => {
+    setLoading(true);
+    const params = { page, pageSize };
+    if (query) params.query = query;
+    if (especialidad) params.especialidad = especialidad;
+    api.get('/formulario', { params })
+      .then((res) => { setSocios(res.data.items); setTotal(res.data.total); setTotalPages(res.data.totalPages); })
+      .catch(() => setSocios([]))
+      .finally(() => setLoading(false));
+  }, [page, query, especialidad]);
 
-  if (error) return (
-    <div className="bg-mesh min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-          <Building2 size={28} className="text-red-400" />
-        </div>
-        <h2 className="text-xl font-bold text-surface-900 mb-2">No encontrado</h2>
-        <p className="text-surface-500 mb-6">{error}</p>
-        <Link to="/directorio" className="btn-primary">
-          <ArrowLeft size={16} /> Volver al directorio
-        </Link>
-      </div>
-    </div>
-  );
-
-  const redes = parseRedes(socio.redesSociales);
-  const socialLinks = [
-    { key: 'website', icon: Globe, label: 'Sitio Web', color: 'text-casatic-600 hover:text-casatic-800 bg-casatic-50' },
-    { key: 'facebook', icon: Facebook, label: 'Facebook', color: 'text-blue-600 hover:text-blue-800 bg-blue-50' },
-    { key: 'linkedin', icon: Linkedin, label: 'LinkedIn', color: 'text-blue-700 hover:text-blue-900 bg-blue-50' },
-    { key: 'twitter', icon: Twitter, label: 'Twitter', color: 'text-sky-500 hover:text-sky-700 bg-sky-50' },
-  ].filter((s) => redes[s.key]);
+  const handleSearch = (e) => { e.preventDefault(); setPage(1); };
+  const clearFilters = () => { setQuery(''); setEspecialidad(''); setPage(1); };
+  const hasFilters = query || especialidad;
 
   return (
     <div className="bg-mesh min-h-screen">
