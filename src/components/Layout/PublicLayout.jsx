@@ -168,9 +168,7 @@ export default function PublicLayout() {
             </div>
           </div>
           <div className="mt-10 pt-8 border-t border-surface-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <Link to="/Navbar" className="flex items-center gap-2.5 group">
-          <button  className="text-xs text-surface-300">Regresar al menu principal</button>
-          </Link>
+      
           </div>
           <div className="mt-10 pt-8 border-t border-surface-800 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-sm text-surface-500">&copy; {new Date().getFullYear()} CASATIC. Todos los derechos reservados.</p>
