@@ -3,7 +3,7 @@ import PublicLayout from './components/Layout/PublicLayout';
 import AdminLayout from './components/Layout/AdminLayout';
 import HomePage from './pages/public/HomePage';
 import DirectorioPage from './pages/public/DirectorioPage';
-import MicroSitioPage from './pages/public/MicroSitioPage';
+import FormularioPage from './pages/public/FormularioPage';
 import LoginPage from './pages/admin/LoginPage';
 import CambiarPasswordPage from './pages/admin/CambiarPasswordPage';
 import DashboardPage from './pages/admin/DashboardPage';
@@ -22,7 +22,7 @@ export default function App() {
       <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/directorio" element={<DirectorioPage />} />
-        <Route path="/socio/:slug" element={<MicroSitiopage />} />
+        <Route path="/formulario" element={<FormularioPage />} />
         
       </Route>
 
