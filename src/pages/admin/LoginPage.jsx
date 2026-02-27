@@ -96,7 +96,7 @@ export default function LoginPage() {
           <div className="mt-6 pt-5 border-t border-surface-100">
             <p className="text-center text-xs text-surface-400">
               Directorio tecnológico de El Salvador - CASATIC 2024
-            </p>
+            </p><br></br>
           </div>
           <button
           type='submit' disabled={loading}
