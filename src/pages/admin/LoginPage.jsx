@@ -44,7 +44,7 @@ export default function LoginPage() {
               <Building2 size={30} className="text-white" />
             </div>
             <h1 className="text-2xl font-bold text-surface-900 tracking-tight">CASATIC Admin</h1>
-            <p className="text-surface-500 text-sm mt-1">Directorio Tecnológico de Honduras</p>
+            <p className="text-surface-500 text-sm mt-1">Directorio Tecnológico de El Salvador</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -95,9 +95,16 @@ export default function LoginPage() {
 
           <div className="mt-6 pt-5 border-t border-surface-100">
             <p className="text-center text-xs text-surface-400">
-              Directorio tecnológico de Honduras
+              Directorio tecnológico de El Salvador - CASATIC 2024
             </p>
           </div>
+          <button
+          type='submit' disabled={loading}
+          className="btn-secondary w-full mt-4 py-3 text-base"
+          onClick={() => navigate('/')}
+        ><logIn size={20} />
+          {loading ? 'Volviendo...' : 'Volver al sitio público'}
+        </button>
         </div>
       </div>
     </div>

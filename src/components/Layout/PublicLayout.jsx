@@ -167,9 +167,7 @@ export default function PublicLayout() {
               </ul>
             </div>
           </div>
-          <div className="mt-10 pt-8 border-t border-surface-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-      
-          </div>
+         
           <div className="mt-10 pt-8 border-t border-surface-800 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-sm text-surface-500">&copy; {new Date().getFullYear()} CASATIC. Todos los derechos reservados.</p>
             <p className="text-xs text-surface-600">Desarrollado con React + .NET 8</p>

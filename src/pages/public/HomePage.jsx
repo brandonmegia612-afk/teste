@@ -77,7 +77,7 @@ export default function HomePage() {
 
             <div className="flex flex-col sm:flex-row items-start gap-4 animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
               <Link
-                to="/directorio"
+                to="/directorio/especialidades"
                 className="group inline-flex items-center gap-2.5 bg-casatic-600 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-casatic-500 transition-all duration-300 hover:shadow-xl hover:shadow-casatic-600/25 hover:-translate-y-0.5 text-lg"
               >
                 <Search size={20} />
@@ -119,7 +119,7 @@ export default function HomePage() {
       <section className="py-12 bg-white border-b border-surface-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-sm font-medium text-surface-400 uppercase tracking-wider mb-8">
-            Respaldado por la industria tecnológica hondureña
+            Respaldado por la industria tecnológica salvadoreña
           </p>
           <div className="flex items-center justify-center gap-12 flex-wrap opacity-40">
             {['Cloud Computing', 'DevOps', 'IA & Machine Learning', 'Desarrollo Web', 'Infraestructura'].map((t) => (
