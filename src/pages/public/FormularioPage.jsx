@@ -36,23 +36,16 @@ export default function MicroSitioPage() {
   const [enviado, setEnviado] = useState(false);
   const [formError, setFormError] = useState(null);
 
-  useEffect(() => {
-    setLoading(true);
-    api.get(`/directorio/socio/${slug}`)
-      .then((res) => setSocio(res.data))
-      .catch(() => setError('Socio no encontrado o deshabilitado'))
-      .finally(() => setLoading(false));
-  }, [slug]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setEnviando(true);
     setFormError(null);
     try {
-      await api.post(`/formulariocontacto/${socio.id}`, form);
+      await api.post('/formulario/contacto', form);
       setEnviado(true);
       setForm({ nombre: '', correo: '', mensaje: '' });
-    } catch {
+    } catch (err) {
       setFormError('Error al enviar el formulario. Intente de nuevo.');
     } finally {
       setEnviando(false);
