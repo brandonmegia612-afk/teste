@@ -100,7 +100,7 @@ export default function LoginPage() {
           </div>
           <button
           type='submit' disabled={loading}
-          className="btn-secondary w-full mt-4 py-3 text-base"
+          className="btn-secondary w-full py-3 text-base"
           onClick={() => navigate('/')}
         ><logIn size={20} />
           {loading ? 'Volviendo...' : 'Volver al sitio público'}
