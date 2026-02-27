@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Building2, Search, Home, Menu, X, ChevronRight,LogIn} from 'lucide-react';
+import { Building2, Search, Home, Menu, X, ChevronRight,LogIn,LogOut, KeyRound, Lock, Unlock, ShieldCheck} from 'lucide-react';
 
 export default function PublicLayout() {
   const [scrolled, setScrolled] = useState(false);
@@ -18,7 +18,7 @@ export default function PublicLayout() {
   const navLinks = [
     { to: '/', label: 'Inicio', icon: Home },
     { to: '/directorio', label: 'Directorio', icon: Search },
-    { to: '/formulario', label: 'Formulario', icon: LogIn }
+    { to: '/formulario', label: 'Formulario', icon: Unlock }
     
   ];
 

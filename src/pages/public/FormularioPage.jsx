@@ -26,31 +26,19 @@ function PageSkeleton() {
   );
 }
 
-export default function MicroSitioPage() {
-  const { slug } = useParams();
-  const [socio, setSocio] = useState(null);
+export default function FormularioPage() {
+  const [socios, setSocios] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [query, setQuery] = useState('');
+  const [especialidad, setEspecialidad] = useState('');
+  const [especialidades, setEspecialidades] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [form, setForm] = useState({ nombre: '', correo: '', mensaje: '' });
-  const [enviando, setEnviando] = useState(false);
-  const [enviado, setEnviado] = useState(false);
-  const [formError, setFormError] = useState(null);
+  const pageSize = 12;
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setEnviando(true);
-    setFormError(null);
-    try {
-      await api.post('/formulario/contacto', form);
-      setEnviado(true);
-      setForm({ nombre: '', correo: '', mensaje: '' });
-    } catch (err) {
-      setFormError('Error al enviar el formulario. Intente de nuevo.');
-    } finally {
-      setEnviando(false);
-    }
-  };
+
 
   useEffect(() => {
     api.get('/formulario/especialidades').then((res) => setEspecialidades(res.data)).catch(() => {});
