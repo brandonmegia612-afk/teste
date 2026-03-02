@@ -248,27 +248,9 @@ export default function FormularioPage() {
                 </FormField>
               </div>
 
-              <FormField label="URL del Logotipo" icon={Image} error={errors.logoUrl}>
-                <input
-                  type="url"
-                  name="logoUrl"
-                  value={form.logoUrl}
-                  onChange={handleChange}
-                  placeholder="https://miempresa.com/logo.png"
-                  className="input-field pl-10"
-                />
-              </FormField>
+              
 
-              <FormField label="Sitio Web" icon={Globe} error={errors.sitioWeb}>
-                <input
-                  type="url"
-                  name="sitioWeb"
-                  value={form.sitioWeb}
-                  onChange={handleChange}
-                  placeholder="https://miempresa.com"
-                  className={`input-field pl-10 ${errors.sitioWeb ? 'border-red-400' : ''}`}
-                />
-              </FormField>
+            
 
             </div>
           </section>
@@ -395,7 +377,7 @@ export default function FormularioPage() {
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <button
               type="button"
-              onClick={() => navigate('/directorio')}
+              onClick={() => navigate('/')}
               disabled={isLoading}
               className="btn-secondary w-full sm:w-auto px-6 py-3 text-base order-2 sm:order-1"
             >

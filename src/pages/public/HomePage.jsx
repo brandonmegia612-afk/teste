@@ -2,8 +2,15 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../api/client';
 import {
-  Search, Building2, Globe, ShieldCheck, ArrowRight,
-  Zap, Users, BarChart3, CheckCircle, Star
+  Search,
+  Building2,
+  Globe,
+  ShieldCheck,
+  ArrowRight,
+  CheckCircle,
+  Star,
+  BarChart3,
+  Users
 } from 'lucide-react';
 
 function AnimatedCounter({ target, suffix = '' }) {
@@ -22,7 +29,11 @@ function AnimatedCounter({ target, suffix = '' }) {
 }
 
 export default function HomePage() {
-  const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState({
+    sociosActivos: 0,
+    totalSocios: 0,
+    visitasMes: 0,
+  });
 
   useEffect(() => {
     api.get('/reportes/dashboard')
@@ -31,23 +42,24 @@ export default function HomePage() {
   }, []);
 
   const features = [
-    { icon: Search, title: 'Búsqueda Inteligente', desc: 'Full-Text Search avanzado para encontrar socios por nombre, especialidad, servicio o tecnología.', color: 'from-blue-500 to-cyan-500' },
-    { icon: Building2, title: 'Micro-sitios', desc: 'Cada socio cuenta con un perfil profesional detallado con información corporativa y de contacto.', color: 'from-violet-500 to-purple-500' },
-    { icon: Globe, title: 'Visibilidad Global', desc: 'Directorio público integrado a casatic.org para máxima exposición de nuestros socios.', color: 'from-emerald-500 to-teal-500' },
-    { icon: ShieldCheck, title: 'Gestión Segura', desc: 'Panel administrativo protegido con JWT, roles y auditoría de actividad en tiempo real.', color: 'from-orange-500 to-amber-500' },
+    // ✅ BUG 3 FIXED: propiedad "icon" agregada a cada feature
+    { icon: Search,      title: 'Búsqueda Inteligente', desc: 'Full-Text Search avanzado para encontrar socios por nombre, especialidad, servicio o tecnología.',      color: 'from-blue-500 to-cyan-500'     },
+    { icon: Building2,   title: 'Micro-sitios',          desc: 'Cada socio cuenta con un perfil profesional detallado con información corporativa y de contacto.',       color: 'from-violet-500 to-purple-500'  },
+    { icon: Globe,       title: 'Visibilidad Global',    desc: 'Directorio público integrado a casatic.org para máxima exposición de nuestros socios.',                  color: 'from-emerald-500 to-teal-500'   },
+    { icon: ShieldCheck, title: 'Gestión Segura',        desc: 'Panel administrativo protegido con JWT, roles y auditoría de actividad en tiempo real.',                 color: 'from-orange-500 to-amber-500'   },
   ];
 
   const statsCards = [
-    { label: 'Socios Activos', value: stats?.sociosActivos || 0, icon: Building2, suffix: '+' },
-    { label: 'Especialidades', value: stats?.totalSocios ? 12 : 0, icon: Star, suffix: '+' },
-    { label: 'Visitas este Mes', value: stats?.visitasMes || 0, icon: BarChart3, suffix: '' },
+    // ✅ BUG 1 & 2 FIXED: "src" reemplazado por "icon" con componente Lucide real
+    { label: 'Socios Activos',   value: stats?.sociosActivos || 0,          icon: BarChart3, suffix: '+' },
+    { label: 'Especialidades',   value: stats?.totalSocios ? 12 : 0,        icon: Star,      suffix: '+' },
+    { label: 'Visitas este Mes', value: stats?.visitasMes  || 0,            icon: Users,     suffix: ''  },
   ];
 
   return (
     <div className="overflow-hidden">
       {/* ── Hero Section ────────────────────────────────── */}
       <section className="relative min-h-[85vh] flex items-center bg-surface-950 overflow-hidden">
-        {/* Animated background */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-casatic-950 via-surface-950 to-casatic-900" />
           <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-casatic-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 animate-pulse-soft" />
@@ -58,15 +70,13 @@ export default function HomePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-casatic-500/10 border border-casatic-500/20 text-casatic-300 px-4 py-1.5 rounded-full text-sm font-medium mb-6 animate-fade-in">
-              <Zap size={14} className="text-casatic-400" />
+              <img src="/src/pages/public/img/" alt="CASATIC" className="w-20 h-20 object-contain" />
               Plataforma Oficial CASATIC 2026
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight mb-6 animate-fade-in-up">
               Directorio
-              <span className="block text-gradient-accent">
-                Interactivo
-              </span>
+              <span className="block text-gradient-accent">Interactivo</span>
               de Socios
             </h1>
 
@@ -77,7 +87,8 @@ export default function HomePage() {
 
             <div className="flex flex-col sm:flex-row items-start gap-4 animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
               <Link
-                to="/directorio/especialidades"
+                to="/directorio/"
+              
                 className="group inline-flex items-center gap-2.5 bg-casatic-600 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-casatic-500 transition-all duration-300 hover:shadow-xl hover:shadow-casatic-600/25 hover:-translate-y-0.5 text-lg"
               >
                 <Search size={20} />
@@ -95,23 +106,22 @@ export default function HomePage() {
           </div>
 
           {/* Stats floating cards */}
-          {stats && (
-            <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl stagger-children">
-              {statsCards.map((s, i) => (
-                <div key={i} className="bg-white/[0.04] backdrop-blur-sm border border-white/[0.08] rounded-2xl p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 bg-casatic-500/15 rounded-xl flex items-center justify-center">
-                    <s.icon size={18} className="text-casatic-400" />
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold text-white">
-                      <AnimatedCounter target={s.value} suffix={s.suffix} />
-                    </p>
-                    <p className="text-xs text-surface-500">{s.label}</p>
-                  </div>
+          <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl stagger-children">
+            {statsCards.map((s, i) => (
+              <div key={i} className="bg-white/[0.04] backdrop-blur-sm border border-white/[0.08] rounded-2xl p-4 flex items-center gap-3">
+                <div className="w-10 h-10 bg-casatic-500/15 rounded-xl flex items-center justify-center">
+                  {/* ✅ BUG 1 FIXED: s.icon en lugar de s.img */}
+                  <s.icon size={18} className="text-casatic-400" />
                 </div>
-              ))}
-            </div>
-          )}
+                <div>
+                  <p className="text-xl font-bold text-white">
+                    <AnimatedCounter target={s.value} suffix={s.suffix} />
+                  </p>
+                  <p className="text-xs text-surface-500">{s.label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -146,6 +156,7 @@ export default function HomePage() {
             {features.map((f, i) => (
               <div key={i} className="group card-interactive p-6 text-center">
                 <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-5 bg-gradient-to-br ${f.color} shadow-lg`}>
+                  {/* ✅ BUG 3 FIXED: ahora f.icon siempre existe */}
                   <f.icon size={24} className="text-white" />
                 </div>
                 <h3 className="font-semibold text-lg text-surface-900 mb-2 group-hover:text-casatic-600 transition-colors">
@@ -173,9 +184,9 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
             <div className="hidden md:block absolute top-12 left-1/4 right-1/4 h-px bg-gradient-to-r from-casatic-200 via-casatic-300 to-casatic-200" />
             {[
-              { step: '01', title: 'Busca', desc: 'Usa el buscador avanzado para filtrar por especialidad, servicio o tecnología.', icon: Search },
-              { step: '02', title: 'Explora', desc: 'Revisa los perfiles detallados de cada empresa con toda su información.', icon: Building2 },
-              { step: '03', title: 'Conecta', desc: 'Envía un formulario de contacto directamente al socio de tu interés.', icon: Users },
+              { step: '01', title: 'Busca',   desc: 'Usa el buscador avanzado para filtrar por especialidad, servicio o tecnología.', icon: Search    },
+              { step: '02', title: 'Explora', desc: 'Revisa los perfiles detallados de cada empresa con toda su información.',         icon: Building2 },
+              { step: '03', title: 'Conecta', desc: 'Envía un formulario de contacto directamente al socio de tu interés.',           icon: Users     },
             ].map((item, i) => (
               <div key={i} className="relative text-center">
                 <div className="w-12 h-12 bg-casatic-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 font-bold text-sm shadow-lg shadow-casatic-600/25 relative z-10">

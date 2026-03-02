@@ -155,7 +155,7 @@ const navLinks = [
               <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Navegación</h4>
               <ul className="space-y-2">
                 <li><Link to="/" className="text-sm hover:text-white transition-colors">Inicio</Link></li>
-                <li><Link to="/directorio" className="text-sm hover:text-white transition-colors">Directorio de Socios</Link></li>
+                <li><Link to="/directorio/" className="text-sm hover:text-white transition-colors">Directorio de Socios</Link></li>
                 <li><Link to="/admin/login" className="text-sm hover:text-white transition-colors">Panel de Administración</Link></li>
               </ul>
             </div>
