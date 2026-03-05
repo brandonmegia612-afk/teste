@@ -32,7 +32,7 @@ export default function HomePage() {
   }, []);
 
   const features = [
-    { img: logo2,className:'w-500 h-500', title: 'Búsqueda Inteligente', desc: 'Full-Text Search avanzado para encontrar socios por nombre, especialidad, servicio o tecnología.', color: 'bg-white/10' },
+    { img: logo2,className:'w-500 h-500', title: 'Búsqueda Inteligente',subtitle:'Busca nuestros proveedores accediendo', desc: 'Full-Text Search avanzado para encontrar socios por nombre, especialidad, servicio o tecnología.', color: 'bg-white/10' },
     {  img: logo2,className:'w-500 h-500', title: 'Micro-sitios', desc: 'Cada socio cuenta con un perfil profesional detallado con información corporativa y de contacto.', color: 'from-violet-500 to-purple-500' },
     { img: logo2,className:'w-500 h-500', title: 'Visibilidad Global', desc: 'Directorio público integrado a casatic.org para máxima exposición de nuestros socios.', color: 'from-emerald-500 to-teal-500' },
     { img: logo2,className:'w-500 h-500', title: 'Gestión Segura', desc: 'Panel administrativo protegido con JWT, roles y auditoría de actividad en tiempo real.', color: 'from-orange-500 to-amber-500' },
@@ -176,7 +176,11 @@ export default function HomePage() {
 
       <p className="text-sm text-surface-600">
         {f.desc}
-      </p>
+      </p><br></br><br></br>
+      <h1 className='text-lg font-bold text-surface-900 mb-2'>{f.subtitle}</h1>
+      <div className='bg-[grb{63,208-216}]'>
+      <link src="logo"></link>
+      </div>
 
     </div>
   ))}
