@@ -133,3 +133,7 @@ button:disabled {
   background: #dcfce7;
   color: #166534;
 }
+@keyframes floatSlow {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}

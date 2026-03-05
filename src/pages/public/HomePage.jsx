@@ -83,7 +83,7 @@ export default function HomePage() {
 
             <div className="flex flex-col sm:flex-row items-start gap-4 animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
               <Link
-                to="/directorio/especialidades"
+                to="/directorio"
                 className="group inline-flex items-center gap-2.5 bg-casatic-600 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-casatic-500 transition-all duration-300 hover:shadow-xl hover:shadow-casatic-600/25 hover:-translate-y-0.5 text-lg"
               >
                 <Search size={20} />
