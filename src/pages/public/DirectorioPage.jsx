@@ -57,7 +57,8 @@ export default function DirectorioPage() {
   const hasFilters = query || especialidad;
 
   return (
-    <div className="bg-mesh min-h-screen">
+<div className="min-h-screen" style={{ background: 'linear-gradient(to bottom, #0C9EC6, #0B0B35)' }}>
+
       {/* ── Header ───────────────────────────────────────── */}
       <div className="bg-gradient-to-br from-casatic-700 via-casatic-800 to-surface-900 text-white py-16 relative overflow-hidden">
         <div className="absolute inset-0">
@@ -90,7 +91,9 @@ export default function DirectorioPage() {
       </div><br></br>
       <br></br>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10 pb-16 img-rounded-lg">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-10 pb-16 rounded-3xl shadow-lg" 
+     style={{ background: 'linear-gradient(to bottom, #E5E7EB, #FFFFFF)' }}>
+      <br />
         {/* ── Search Bar ─────────────────────────────────── */}
         <form
           onSubmit={handleSearch}

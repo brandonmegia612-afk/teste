@@ -157,7 +157,7 @@ export default function FormularioPage() {
   const isLoading = estado === ESTADO.LOADING;
 
   return (
-    <div className="bg-mesh min-h-screen">
+    <div className="min-h-screen" style={{ background: 'linear-gradient(to bottom, #0C9EC6, #0B0B35)' }}>
       {/* ── Header ─────────────────────────────────────────── */}
       <div className="bg-gradient-to-br from-casatic-700 via-casatic-800 to-surface-900 text-white py-16 relative overflow-hidden">
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
