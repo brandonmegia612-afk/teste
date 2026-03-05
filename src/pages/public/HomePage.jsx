@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../api/client';
 import logo from '../../pages/public/img/Reverse - v2@4x.png';
+import logo2 from '../../pages/public/img/Full Color v4@4x.png';
 import {
   Search, Building2, Globe, ShieldCheck, ArrowRight, Users, BarChart3, CheckCircle, Star
 } from 'lucide-react';
@@ -31,10 +32,10 @@ export default function HomePage() {
   }, []);
 
   const features = [
-    { icon: Search, title: 'Búsqueda Inteligente', desc: 'Full-Text Search avanzado para encontrar socios por nombre, especialidad, servicio o tecnología.', color: 'from-blue-500 to-cyan-500' },
-    { icon: Building2, title: 'Micro-sitios', desc: 'Cada socio cuenta con un perfil profesional detallado con información corporativa y de contacto.', color: 'from-violet-500 to-purple-500' },
-    { icon: Globe, title: 'Visibilidad Global', desc: 'Directorio público integrado a casatic.org para máxima exposición de nuestros socios.', color: 'from-emerald-500 to-teal-500' },
-    { icon: ShieldCheck, title: 'Gestión Segura', desc: 'Panel administrativo protegido con JWT, roles y auditoría de actividad en tiempo real.', color: 'from-orange-500 to-amber-500' },
+    { img: logo2,className:'w-500 h-500', title: 'Búsqueda Inteligente', desc: 'Full-Text Search avanzado para encontrar socios por nombre, especialidad, servicio o tecnología.', color: 'bg-white/10' },
+    {  img: logo2,className:'w-500 h-500', title: 'Micro-sitios', desc: 'Cada socio cuenta con un perfil profesional detallado con información corporativa y de contacto.', color: 'from-violet-500 to-purple-500' },
+    { img: logo2,className:'w-500 h-500', title: 'Visibilidad Global', desc: 'Directorio público integrado a casatic.org para máxima exposición de nuestros socios.', color: 'from-emerald-500 to-teal-500' },
+    { img: logo2,className:'w-500 h-500', title: 'Gestión Segura', desc: 'Panel administrativo protegido con JWT, roles y auditoría de actividad en tiempo real.', color: 'from-orange-500 to-amber-500' },
   ];
 
   const statsCards = [
@@ -82,7 +83,7 @@ export default function HomePage() {
 
             <div className="flex flex-col sm:flex-row items-start gap-4 animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
               <Link
-                to="/directorio/especialidades"
+                to="/directorio"
                 className="group inline-flex items-center gap-2.5 bg-casatic-600 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-casatic-500 transition-all duration-300 hover:shadow-xl hover:shadow-casatic-600/25 hover:-translate-y-0.5 text-lg"
               >
                 <Search size={20} />
@@ -134,35 +135,57 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Features Grid ───────────────────────────────── */}
-      <section className="py-20 bg-surface-50 bg-mesh">
+      {/* ── cuadricula de caracteristicas ───────────────────────────────── */}
+      <section className="py-20 bg-gradient-to-br from-[rgb(63,208,216)] to-[#1e3a8a] ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 tracking-tight mb-4">
               Todo lo que necesitas en un
-              <span className="text-gradient"> solo lugar</span>
+              <span className="text-#1e3a8a text-gradient"> solo lugar</span>
             </h2>
-            <p className="text-lg text-surface-500">
+            <p className="bg-black/2 inline-block text-lg text-surface-0 px-4 py-2 rounded-lg">
               Una plataforma moderna para conectar empresas de tecnología con quienes necesitan sus servicios.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
-            {features.map((f, i) => (
-              <div key={i} className="group card-interactive p-6 text-center">
-                <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-5 bg-gradient-to-br ${f.color} shadow-lg`}>
-                  <f.icon size={24} className="text-white" />
-                </div>
-                <h3 className="font-semibold text-lg text-surface-900 mb-2 group-hover:text-casatic-600 transition-colors">
-                  {f.title}
-                </h3>
-                <p className="text-sm text-surface-500 leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
+  {features.map((f, i) => (
+    <div key={i} className="group card-interactive p-6 text-center">
 
+      {/* Imagen si existe */}
+      {f.img && (
+        <div className="flex justify-center mb-6">
+          <img
+            src={f.img}
+            alt={f.title}
+            className="w-25 h-auto object-contain"
+          />
+        </div>
+      )}
+
+      {/* Icono si existe */}
+      {f.icon && (
+        <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-xl bg-gradient-to-br from-casatic-500 to-casatic-700 text-white">
+          <f.icon size={24} />
+        </div>
+      )}
+
+      <h3 className="text-lg font-bold text-surface-900 mb-2">
+        {f.title}
+      </h3>
+
+      <p className="text-sm text-surface-600">
+        {f.desc}
+      </p>
+
+    </div>
+  ))}
+  </div>
+  </div>
+  </section>
+
+     
+                
       {/* ── How it works ────────────────────────────────── */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -222,3 +245,4 @@ export default function HomePage() {
     </div>
   );
 }
+
