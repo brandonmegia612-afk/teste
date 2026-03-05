@@ -173,6 +173,7 @@ export default function FormularioPage() {
           >
             Registra tu Empresa
           </h1>
+          
           <p
             style={{ animationDelay: '0.1s' }}
             className="mt-3 text-white/70 text-center text-lg max-w-xl animate-fade-in-up"

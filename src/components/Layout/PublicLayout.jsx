@@ -38,24 +38,16 @@ const navLinks = [
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2.5 group">
+            <img src="/src/pages/public/img/Full Color v2@4x.png" alt="CASATIC Logo" className='h-9 w-auto' />
+                  
               <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${
                 scrolled
                   ? 'bg-casatic-600 shadow-lg shadow-casatic-600/25'
                   : 'bg-white/20 backdrop-blur-sm'
               }`}>
-                <Building2 size={20} className="text-white" />
-              </div>
-              <div className="flex flex-col">
-                <span className={`text-lg font-bold leading-tight tracking-tight transition-colors duration-300 ${
-                  scrolled ? 'text-surface-900' : 'text-white'
-                }`}>
-                  CASATIC
-                </span>
-                <span className={`text-[10px] font-medium uppercase tracking-widest leading-none transition-colors duration-300 ${
-                  scrolled ? 'text-surface-400' : 'text-white/60'
-                }`}>
-                  Directorio 2026
-                </span>
+                <Building2 size={20} className={`transition-colors duration-300 ${
+                  scrolled ? 'text-white' : 'text-white/80 group-hover:text-white'
+                }`} />
               </div>
             </Link>
 
@@ -132,19 +124,21 @@ const navLinks = [
       </main>
 
       {/* ── Footer profesional ──────────────────────────── */}
-      <footer className="bg-surface-900 text-surface-400 relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid opacity-30" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-9 h-9 bg-casatic-600 rounded-xl flex items-center justify-center">
-                  <Building2 size={20} className="text-white" />
-                </div>
-                <div>
-                  <p className="font-bold text-white">CASATIC</p>
-                  <p className="text-xs text-surface-500">Directorio Interactivo 2026</p>
-                </div>
+<footer className="bg-[rgb(10,10,10)] text-surface-400 relative overflow-hidden">
+  <div className="absolute inset-0 bg-grid opacity-30" />
+  <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        {/* 'gap-2.5' corregido para el espaciado entre logo y texto */}
+        <div className="flex items-center gap-2.5 mb-4">
+          <div className="w-9 h-9 overflow-hidden rounded-xl flex items-center justify-center">
+            {/* Reemplazo de icono por imagen */}
+            <img 
+              src="/src/pages/public/img/Reverse - v2@4x.png" 
+              alt="Logo" 
+             className="w-21 h-20 absolute -top-1 -left-4 opacity-100"
+            /> </div>
+                
               </div>
               <p className="text-sm leading-relaxed text-surface-500">
                 Cámara de Tecnologías de Información y Comunicación de El Salvador.
