@@ -4,8 +4,8 @@ import api from '../../api/client';
 import logo from '../../pages/public/img/Reverse - v2@4x.png';
 import logo2 from '../../pages/public/img/Full Color v4@4x.png';
 import fondo1 from '../../pages/public/img/Imagen1.png'
-import fondo3 from '../../pages/public/img/imagen2.png'
-import fondo2 from '../../pages/public/img/Imagen3.png'
+import fondo3 from '../../pages/public/img/usario2.gif'
+import fondo2 from '../../pages/public/img/comunicacion.gif'
 import fondo4 from '../../pages/public/img/giphy.gif'
 import {
   Search, Building2, Globe, ShieldCheck, ArrowRight, Users, BarChart3, CheckCircle, Star
