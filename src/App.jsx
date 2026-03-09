@@ -10,7 +10,7 @@ import DashboardPage from './pages/admin/DashboardPage';
 import SociosAdminPage from './pages/admin/SociosAdminPage';
 import UsuariosAdminPage from './pages/admin/UsuariosAdminPage';
 import SocioFormPage from './pages/admin/SocioFormPage';
-
+import PresentacionPage from './pages/public/PresentacionPage';
 
 /**
  * App principal: rutas públicas y admin.
@@ -22,6 +22,7 @@ export default function App() {
       <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/directorio" element={<DirectorioPage />} />
+         <Route path="/presentacion" element={<PresentacionPage />} />
         <Route path="/formulario" element={<FormularioPage />} />
         
       </Route>
