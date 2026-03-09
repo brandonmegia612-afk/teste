@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../../api/client';
 import logo from '../../pages/public/img/Reverse - v2@4x.png';
 import logo2 from '../../pages/public/img/Full Color v4@4x.png';
+import fondo1 from '../../pages/public/img/Captura de pantalla 2026-03-09 094117.png'
 import {
   Search, Building2, Globe, ShieldCheck, ArrowRight, Users, BarChart3, CheckCircle, Star
 } from 'lucide-react';
@@ -32,7 +33,7 @@ export default function HomePage() {
   }, []);
 
   const features = [
-    { img: logo2,className:'w-500 h-500', title: 'Búsqueda Inteligente',subtitle:'Busca nuestros proveedores accediendo', desc: 'Full-Text Search avanzado para encontrar socios por nombre, especialidad, servicio o tecnología.', color: 'bg-white/10' },
+    { img: logo2,img2:fondo1,className:'w-500 h-500', title: 'Búsqueda Inteligente',subtitle:'Busca nuestros proveedores accediendo', desc: 'Full-Text Search avanzado para encontrar socios por nombre, especialidad, servicio o tecnología.', subtitle2:'accede al panel',color: 'bg-white/10' },
     {  img: logo2,className:'w-500 h-500', title: 'Micro-sitios', desc: 'Cada socio cuenta con un perfil profesional detallado con información corporativa y de contacto.', color: 'from-violet-500 to-purple-500' },
     { img: logo2,className:'w-500 h-500', title: 'Visibilidad Global', desc: 'Directorio público integrado a casatic.org para máxima exposición de nuestros socios.', color: 'from-emerald-500 to-teal-500' },
     { img: logo2,className:'w-500 h-500', title: 'Gestión Segura', desc: 'Panel administrativo protegido con JWT, roles y auditoría de actividad en tiempo real.', color: 'from-orange-500 to-amber-500' },
@@ -147,10 +148,12 @@ export default function HomePage() {
               Una plataforma moderna para conectar empresas de tecnología con quienes necesitan sus servicios.
             </p>
           </div>
-
+          {/*--------------------cuadro de menus de casatic --------------*/}
      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
+     
   {features.map((f, i) => (
     <div key={i} className="group card-interactive p-6 text-center">
+    
 
       {/* Imagen si existe */}
       {f.img && (
@@ -161,6 +164,7 @@ export default function HomePage() {
             className="w-25 h-auto object-contain"
           />
         </div>
+        
       )}
 
       {/* Icono si existe */}
@@ -170,14 +174,16 @@ export default function HomePage() {
         </div>
       )}
 
-      <h3 className="text-lg font-bold text-surface-900 mb-2">
+     <h3 className="text-[#0a0a0a] bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent mb-2 font-bold">
         {f.title}
       </h3>
 
       <p className="text-sm text-surface-600">
         {f.desc}
       </p><br></br><br></br>
-      <h1 className='text-lg font-bold text-surface-900 mb-2'>{f.subtitle}</h1>
+      <h1 className="text-#0b0b35 text-gradient">{f.subtitle}</h1>
+      <h4 className='text-black br-gradient-to-r from-yellow-400 to-green-600 bg-clip-text-transparent mb-2 font-bold'>
+      <link to></link>{f.subtitle2}</h4>
       <div className='bg-[grb{63,208-216}]'>
       <link src="logo"></link>
       </div>
@@ -190,36 +196,7 @@ export default function HomePage() {
 
      
                 
-      {/* ── How it works ────────────────────────────────── */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 tracking-tight mb-4">
-              ¿Cómo funciona?
-            </h2>
-            <p className="text-lg text-surface-500">
-              Tres sencillos pasos para encontrar al socio tecnológico ideal.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            <div className="hidden md:block absolute top-12 left-1/4 right-1/4 h-px bg-gradient-to-r from-casatic-200 via-casatic-300 to-casatic-200" />
-            {[
-              { step: '01', title: 'Busca', desc: 'Usa el buscador avanzado para filtrar por especialidad, servicio o tecnología.', icon: Search },
-              { step: '02', title: 'Explora', desc: 'Revisa los perfiles detallados de cada empresa con toda su información.', icon: Building2 },
-              { step: '03', title: 'Conecta', desc: 'Envía un formulario de contacto directamente al socio de tu interés.', icon: Users },
-            ].map((item, i) => (
-              <div key={i} className="relative text-center">
-                <div className="w-12 h-12 bg-casatic-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 font-bold text-sm shadow-lg shadow-casatic-600/25 relative z-10">
-                  {item.step}
-                </div>
-                <h3 className="text-xl font-bold text-surface-900 mb-2">{item.title}</h3>
-                <p className="text-surface-500 text-sm max-w-xs mx-auto">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+     
 
       {/* ── CTA ─────────────────────────────────────────── */}
       <section className="relative py-20 overflow-hidden">
