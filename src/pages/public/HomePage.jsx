@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import api from '../../api/client';
 import logo from '../../pages/public/img/Reverse - v2@4x.png';
 import logo2 from '../../pages/public/img/Full Color v4@4x.png';
-import fondo1 from '../../pages/public/img/Captura de pantalla 2026-03-09 094117.png'
+import fondo1 from '../../pages/public/img/Imagen1.png'
+import fondo3 from '../../pages/public/img/imagen2.png'
+import fondo2 from '../../pages/public/img/Imagen3.png'
+import fondo4 from '../../pages/public/img/giphy.gif'
 import {
   Search, Building2, Globe, ShieldCheck, ArrowRight, Users, BarChart3, CheckCircle, Star
 } from 'lucide-react';
@@ -33,10 +36,10 @@ export default function HomePage() {
   }, []);
 
   const features = [
-    { img: logo2,img2:fondo1,className:'w-500 h-500', title: 'Búsqueda Inteligente',subtitle:'Busca nuestros proveedores accediendo', desc: 'Full-Text Search avanzado para encontrar socios por nombre, especialidad, servicio o tecnología.', subtitle2:'accede al panel',color: 'bg-white/10' },
-    {  img: logo2,className:'w-500 h-500', title: 'Micro-sitios', desc: 'Cada socio cuenta con un perfil profesional detallado con información corporativa y de contacto.', color: 'from-violet-500 to-purple-500' },
-    { img: logo2,className:'w-500 h-500', title: 'Visibilidad Global', desc: 'Directorio público integrado a casatic.org para máxima exposición de nuestros socios.', color: 'from-emerald-500 to-teal-500' },
-    { img: logo2,className:'w-500 h-500', title: 'Gestión Segura', desc: 'Panel administrativo protegido con JWT, roles y auditoría de actividad en tiempo real.', color: 'from-orange-500 to-amber-500' },
+    { img: logo2,className:'w-500 h-500', title: 'Búsqueda Inteligente',subtitle:'Busca nuestros proveedores accediendo', desc: 'Full-Text Search avanzado para encontrar socios por nombre, especialidad, servicio o tecnología.', subtitle2:'accede al panel',color: 'bg-white/10',img2:fondo1 },
+    {  img: logo2,className:'w-500 h-500', title: 'Micro-sitios',subtitle:'Encuentra tu usuario para ver tu informacion', desc: 'Cada socio cuenta con un perfil profesional detallado con información corporativa y de contacto.', color: 'from-violet-500 to-purple-500',img2:fondo3 },
+    { img: logo2,className:'w-500 h-500', title: 'Visibilidad Global', desc: 'Directorio público integrado a casatic.org para máxima exposición de nuestros socios.', color: 'from-emerald-500 to-teal-500' ,img2:fondo2},
+    { img: logo2,className:'w-500 h-500', title: 'Gestión Segura', desc: 'Panel administrativo protegido con JWT, roles y auditoría de actividad en tiempo real.', color: 'from-orange-500 to-amber-500',img2:fondo4 },
   ];
 
   const statsCards = [
@@ -181,12 +184,25 @@ export default function HomePage() {
       <p className="text-sm text-surface-600">
         {f.desc}
       </p><br></br><br></br>
-      <h1 className="text-#0b0b35 text-gradient">{f.subtitle}</h1>
-      <h4 className='text-black br-gradient-to-r from-yellow-400 to-green-600 bg-clip-text-transparent mb-2 font-bold'>
-      <link to></link>{f.subtitle2}</h4>
+      <h1 className="text-#0b0b35 text-gradient">{f.subtitle}</h1><br></br>
+     
       <div className='bg-[grb{63,208-216}]'>
       <link src="logo"></link>
       </div>
+      <h1 className="text-[#0b0b35] text-gradient">{f.subtitle2}</h1>
+
+{/* Imagen debajo del subtítulo */}
+{f.img2 && (
+  <div className="flex justify-center mt-4">
+    <img 
+      src={f.img2} 
+   
+      alt="Fondo ilustrativo" 
+      className="w-full max-w-md rounded-lg shadow-lg"
+    />
+  </div>
+)}
+
 
     </div>
   ))}
