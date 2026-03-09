@@ -60,7 +60,7 @@ export default function DirectorioPage() {
 <div className="min-h-screen" style={{ background: 'linear-gradient(to bottom, #0C9EC6, #0B0B35)' }}>
 
       {/* ── Header ───────────────────────────────────────── */}
-      <div className="bg-gradient-to-br from-casatic-700 via-casatic-800 to-surface-900 text-white py-16 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-green-400 to-teal-500 from-casatic-700 via-casatic-800 to-surface-900 text-white py-16 relative overflow-hidden">
         <div className="absolute inset-0">
         <h1  style={{ animationDelay: '0.05s', textAlign: 'center' }} className="text-4xl md:text-5xl font-bold tracking-tight max-w-3xl mx-auto animate-fade-in-up">
         
@@ -81,7 +81,7 @@ export default function DirectorioPage() {
   }}
   className="mt-4 max-w-xl mx-auto animate-fade-in-up"
 >
-  <div className="absolute inset-0 bg-black/40"></div>
+  <div className="absolute inset-0 "></div>
   <p className="relative text-lg text-white text-center">
     Directorio Interactivo CASATIC 2026
   </p>
