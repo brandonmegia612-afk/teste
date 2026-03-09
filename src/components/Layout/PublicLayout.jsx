@@ -17,6 +17,7 @@ export default function PublicLayout() {
 
 const navLinks = [
   { to: '/',           label: 'Inicio',      icon: Home          },
+  { to: '/presentacion', label: 'Presentación', icon: Building2   },
   { to: '/directorio', label: 'Directorio',  icon: Search        },
   { to: '/formulario', label: 'Formulario',  icon: ClipboardList }, // ✅
 ];
@@ -150,15 +151,23 @@ const navLinks = [
               <ul className="space-y-2">
                 <li><Link to="/" className="text-sm hover:text-white transition-colors">Inicio</Link></li>
                 <li><Link to="/directorio/" className="text-sm hover:text-white transition-colors">Directorio de Socios</Link></li>
+                <li><Link to="/presentacion" className="text-sm hover:text-white transition-colors">Presentación</Link></li>
                 <li><Link to="/admin/login" className="text-sm hover:text-white transition-colors">Panel de Administración</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Contacto</h4>
-              <ul className="space-y-2 text-sm">
-                <li>info@casatic.org</li>
-                <li>San Salvador, El Salvador</li>
+            <ul className="space-y-2 text-sm">
+                <li>Teléfono: (+503) 2563-5255</li>
+                <li>Celular: (+503) 7200-8901</li>
               </ul>
+              <br />
+              <div>
+              <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Dirección</h4>
+              <p className="text-sm text-surface-500">
+                Calle Francisco Gavidia Block #161, edificio 8-B, Col. Escalón, San Salvador.
+              </p>
+            </div>
             </div>
           </div>
          
