@@ -3,10 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../../api/client';
 import logo from '../../pages/public/img/Reverse - v2@4x.png';
 import logo2 from '../../pages/public/img/Full Color v4@4x.png';
-import fondo1 from '../../pages/public/img/Imagen1.png'
-import fondo3 from '../../pages/public/img/usario2.gif'
-import fondo2 from '../../pages/public/img/comunicacion.gif'
-import fondo4 from '../../pages/public/img/giphy.gif'
+import fondo1 from '../../pages/public/img/Captura de pantalla 2026-03-09 094117.png'
 import {
   Search, Building2, Globe, ShieldCheck, ArrowRight, Users, BarChart3, CheckCircle, Star
 } from 'lucide-react';
@@ -36,10 +33,10 @@ export default function HomePage() {
   }, []);
 
   const features = [
-    { icon: Search, title: 'Búsqueda Inteligente', desc: 'Full-Text Search avanzado para encontrar socios por nombre, especialidad, servicio o tecnología.', color: 'bg-gradient-to-br from-blue-500 to-purple-600' },
-    { icon: Building2, title: 'Micro-sitios', desc: 'Cada socio cuenta con un perfil profesional detallado con información corporativa y de contacto.', color: 'bg-gradient-to-br from-green-500 to-teal-600' },
-    { icon: Globe, title: 'Visibilidad Global', desc: 'Directorio público integrado a casatic.org para máxima exposición de nuestros socios.', color: 'bg-gradient-to-br from-pink-500 to-red-600' },
-    { icon: ShieldCheck, title: 'Gestión Segura', desc: 'Panel administrativo protegido con JWT, roles y auditoría de actividad en tiempo real.', color: 'bg-gradient-to-br from-yellow-500 to-orange-600' },
+    { img: logo2,img2:fondo1,className:'w-500 h-500', title: 'Búsqueda Inteligente',subtitle:'Busca nuestros proveedores accediendo', desc: 'Full-Text Search avanzado para encontrar socios por nombre, especialidad, servicio o tecnología.', subtitle2:'accede al panel',color: 'bg-white/10' },
+    {  img: logo2,className:'w-500 h-500', title: 'Micro-sitios', desc: 'Cada socio cuenta con un perfil profesional detallado con información corporativa y de contacto.', color: 'from-violet-500 to-purple-500' },
+    { img: logo2,className:'w-500 h-500', title: 'Visibilidad Global', desc: 'Directorio público integrado a casatic.org para máxima exposición de nuestros socios.', color: 'from-emerald-500 to-teal-500' },
+    { img: logo2,className:'w-500 h-500', title: 'Gestión Segura', desc: 'Panel administrativo protegido con JWT, roles y auditoría de actividad en tiempo real.', color: 'from-orange-500 to-amber-500' },
   ];
 
   const statsCards = [
@@ -54,7 +51,7 @@ export default function HomePage() {
       <section className="relative min-h-[85vh] flex items-center bg-surface-950 overflow-hidden">
         {/* Animated background */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#0C9EC6] via-[#1e3a8a] to-[#0B0B35]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-casatic-950 via-surface-950 to-casatic-900" />
           <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-casatic-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 animate-pulse-soft" />
           <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent-500/8 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 animate-pulse-soft" style={{ animationDelay: '1s' }} />
           <div className="absolute inset-0 bg-grid opacity-20" />
@@ -140,14 +137,14 @@ export default function HomePage() {
       </section>
 
       {/* ── cuadricula de caracteristicas ───────────────────────────────── */}
-      <section className="py-20 bg-gradient-to-br from-[#0C9EC6] to-[#0B0B35] ">
+      <section className="py-20 bg-gradient-to-br from-[rgb(63,208,216)] to-[#1e3a8a] ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 tracking-tight mb-4">
               Todo lo que necesitas en un
-              <span className="bg-gradient-to-r from-[#0C9EC6] to-[#0B0B35] bg-clip-text text-transparent"> solo lugar</span>
+              <span className="text-#1e3a8a text-gradient"> solo lugar</span>
             </h2>
-            <p className="bg-white/90 backdrop-blur-sm inline-block text-lg text-surface-800 px-4 py-2 rounded-lg shadow-lg">
+            <p className="bg-black/2 inline-block text-lg text-surface-0 px-4 py-2 rounded-lg">
               Una plataforma moderna para conectar empresas de tecnología con quienes necesitan sus servicios.
             </p>
           </div>
@@ -158,21 +155,38 @@ export default function HomePage() {
     <div key={i} className="group card-interactive p-6 text-center">
     
 
-      {/* Icono */}
-      <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-xl bg-white text-black shadow-md">
-        <f.icon size={32} />
-      </div>
+      {/* Imagen si existe */}
+      {f.img && (
+        <div className="flex justify-center mb-6">
+          <img
+            src={f.img}
+            alt={f.title}
+            className="w-25 h-auto object-contain"
+          />
+        </div>
+        
+      )}
 
-     <h3 className="text-2xl font-bold text-surface-900 mb-2">
+      {/* Icono si existe */}
+      {f.icon && (
+        <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-xl bg-gradient-to-br from-casatic-500 to-casatic-700 text-white">
+          <f.icon size={24} />
+        </div>
+      )}
+
+     <h3 className="text-[#0a0a0a] bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent mb-2 font-bold">
         {f.title}
       </h3>
 
-      <p className="text-sm text-surface-700">
+      <p className="text-sm text-surface-600">
         {f.desc}
       </p><br></br><br></br>
-      <h1 className="text-surface-900 text-gradient">{f.subtitle}</h1><br></br>
-     
-      <h1 className="text-surface-900 text-gradient">{f.subtitle2}</h1>
+      <h1 className="text-#0b0b35 text-gradient">{f.subtitle}</h1>
+      <h4 className='text-black br-gradient-to-r from-yellow-400 to-green-600 bg-clip-text-transparent mb-2 font-bold'>
+      <link to></link>{f.subtitle2}</h4>
+      <div className='bg-[grb{63,208-216}]'>
+      <link src="logo"></link>
+      </div>
 
     </div>
   ))}
@@ -186,7 +200,7 @@ export default function HomePage() {
 
       {/* ── CTA ─────────────────────────────────────────── */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0C9EC6] via-[#1e3a8a] to-[#0B0B35]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-casatic-700 via-casatic-800 to-surface-950" />
         <div className="absolute inset-0 bg-grid opacity-10" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-casatic-500/20 rounded-full blur-3xl" />
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -196,13 +210,13 @@ export default function HomePage() {
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight">
             Gestiona tu presencia digital
           </h2>
-          <p className="text-lg text-white mb-10 max-w-xl mx-auto">
+          <p className="text-lg text-casatic-200 mb-10 max-w-xl mx-auto">
             Accede al panel de administración para actualizar tu perfil,
             ver métricas de visitas y gestionar tus datos empresariales.
           </p>
           <Link
             to="/admin/login"
-            className="group inline-flex items-center gap-2.5 bg-gradient-to-r from-white to-gray-100 text-[#0B0B35] px-8 py-4 rounded-xl font-semibold hover:from-gray-100 hover:to-white transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 text-lg"
+            className="group inline-flex items-center gap-2.5 bg-white text-casatic-800 px-8 py-4 rounded-xl font-semibold hover:bg-casatic-50 transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 text-lg"
           >
             Acceder al Panel
             <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
@@ -212,4 +226,3 @@ export default function HomePage() {
     </div>
   );
 }
-
