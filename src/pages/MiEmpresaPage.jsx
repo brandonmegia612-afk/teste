@@ -1,151 +1,60 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { api } from '../lib/api'
+import { saveSession } from '../lib/auth'
 
-export default function MiEmpresaPage() {
+export default function LoginPage() {
+	const navigate = useNavigate()
+	const location = useLocation()
+	const [email, setEmail] = useState('')
+	const [password, setPassword] = useState('')
 	const [error, setError] = useState('')
-	const [ok, setOk] = useState('')
-	const [empresa, setEmpresa] = useState(null)
-
-	const [form, setForm] = useState({
-		descripcion: '',
-		especialidades: '',
-		servicios: '',
-		redesSociales: '{}',
-		telefono: '',
-		direccion: '',
-		logoUrl: '',
-		marcasRepresenta: ''
-	})
-
-	const payload = useMemo(
-		() => ({
-			descripcion: form.descripcion,
-			especialidades: form.especialidades.split(',').map((item) => item.trim()).filter(Boolean),
-			servicios: form.servicios.split(',').map((item) => item.trim()).filter(Boolean),
-			redesSociales: form.redesSociales,
-			telefono: form.telefono,
-			direccion: form.direccion,
-			logoUrl: form.logoUrl,
-			marcasRepresenta: form.marcasRepresenta
-		}),
-		[form]
-	)
-
-	useEffect(() => {
-		const cargar = async () => {
-			setError('')
-			try {
-				const data = await api.obtenerMiEmpresa()
-				setEmpresa(data)
-				setForm({
-					descripcion: data.descripcion || '',
-					especialidades: (data.especialidades || []).join(', '),
-					servicios: (data.servicios || []).join(', '),
-					redesSociales: data.redesSociales || '{}',
-					telefono: data.telefono || '',
-					direccion: data.direccion || '',
-					logoUrl: data.logoUrl || '',
-					marcasRepresenta: data.marcasRepresenta || ''
-				})
-			} catch (err) {
-				setError(err.message)
-			}
-		}
-
-		cargar()
-	}, [])
 
 	const handleSubmit = async (event) => {
 		event.preventDefault()
 		setError('')
-		setOk('')
 
 		try {
-			const updated = await api.actualizarMiEmpresa(payload)
-			setEmpresa(updated)
-			setOk('Empresa actualizada correctamente')
+			const result = await api.login({ email, password })
+			saveSession(result)
+
+			if (result.primerLogin) {
+				navigate('/cambiar-password')
+				return
+			}
+
+			const redirectTo = location.state?.from || '/directorio'
+			navigate(redirectTo)
 		} catch (err) {
 			setError(err.message)
 		}
 	}
 
-	if (error && !empresa) {
-		return <div className="alert error">{error}</div>
-	}
-
-	if (!empresa) {
-		return <div className="card">Cargando...</div>
-	}
-
 	return (
-		<section className="card">
-			<h2>Mi empresa</h2>
-			<p className="muted">
-				<strong>{empresa.nombreEmpresa}</strong>
-			</p>
+		<section className="card form-card">
+			<h2>Iniciar sesión</h2>
 			{error && <div className="alert error">{error}</div>}
-			{ok && <div className="alert success">{ok}</div>}
 
 			<form onSubmit={handleSubmit}>
-				<label htmlFor="descripcion">Descripción</label>
-				<textarea
-					id="descripcion"
-					rows="4"
-					value={form.descripcion}
-					onChange={(event) => setForm((prev) => ({ ...prev, descripcion: event.target.value }))}
-				/>
-
-				<label htmlFor="especialidades">Especialidades (separadas por coma)</label>
+				<label htmlFor="email">Correo</label>
 				<input
-					id="especialidades"
-					value={form.especialidades}
-					onChange={(event) => setForm((prev) => ({ ...prev, especialidades: event.target.value }))}
+					id="email"
+					type="email"
+					value={email}
+					onChange={(event) => setEmail(event.target.value)}
+					required
 				/>
 
-				<label htmlFor="servicios">Servicios (separados por coma)</label>
+				<label htmlFor="password">Contraseña</label>
 				<input
-					id="servicios"
-					value={form.servicios}
-					onChange={(event) => setForm((prev) => ({ ...prev, servicios: event.target.value }))}
+					id="password"
+					type="password"
+					value={password}
+					onChange={(event) => setPassword(event.target.value)}
+					required
 				/>
 
-				<label htmlFor="redes">Redes sociales (JSON)</label>
-				<textarea
-					id="redes"
-					rows="3"
-					value={form.redesSociales}
-					onChange={(event) => setForm((prev) => ({ ...prev, redesSociales: event.target.value }))}
-				/>
-
-				<label htmlFor="telefono">Teléfono</label>
-				<input
-					id="telefono"
-					value={form.telefono}
-					onChange={(event) => setForm((prev) => ({ ...prev, telefono: event.target.value }))}
-				/>
-
-				<label htmlFor="direccion">Dirección</label>
-				<input
-					id="direccion"
-					value={form.direccion}
-					onChange={(event) => setForm((prev) => ({ ...prev, direccion: event.target.value }))}
-				/>
-
-				<label htmlFor="logoUrl">Logo URL</label>
-				<input
-					id="logoUrl"
-					value={form.logoUrl}
-					onChange={(event) => setForm((prev) => ({ ...prev, logoUrl: event.target.value }))}
-				/>
-
-				<label htmlFor="marcas">Marcas que representa</label>
-				<input
-					id="marcas"
-					value={form.marcasRepresenta}
-					onChange={(event) => setForm((prev) => ({ ...prev, marcasRepresenta: event.target.value }))}
-				/>
-
-				<button type="submit">Guardar cambios</button>
+				<button type="submit">Entrar</button>
 			</form>
 		</section>
 	)
